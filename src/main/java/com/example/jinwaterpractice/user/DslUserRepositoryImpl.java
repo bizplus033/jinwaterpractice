@@ -39,6 +39,7 @@ public class DslUserRepositoryImpl implements DslUserRepository {
     }
     /**
      * 특정 키워드로 모든 회원 찾기
+     * findByUserAllBySearchKeyword
      * */
     @Override
     public Page<User> findByUserAllBySearchKeyword(String userId, String name, Pageable pageable) {
