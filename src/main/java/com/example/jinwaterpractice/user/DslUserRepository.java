@@ -1,4 +1,4 @@
-package com.example.jinwaterpractice.user.dto;
+package com.example.jinwaterpractice.user;
 
 import com.example.jinwaterpractice.user.User;
 import org.springframework.data.domain.Page;
