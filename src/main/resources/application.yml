@@ -1,0 +1,59 @@
+#port
+server:
+  port: 8080
+
+#datasources
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+
+  #deploy
+  #spring:
+  #  datasource:
+  #    url: jdbc:mysql://183.111.79.247:3306/mes_jin_water?useSSL=false&serverTimezone=Asia/Seoul
+  #    username: root
+  #    password: ey52_8zd
+  #  datasource:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  #hibernate
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        show_sql: true
+        format_sql: false
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+  #liveReload
+  devtools:
+    livereload:
+      enabled: true
+
+  #spring:
+  #  freemarker:
+  #    cache: false
+
+  # admin
+  admin:
+    user:
+      userId: admin
+      password: 1234
+
+
+# spring security debug log
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

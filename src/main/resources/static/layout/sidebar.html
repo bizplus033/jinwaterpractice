@@ -1,0 +1,137 @@
+<div class="sidebar">
+    <div class="brand">
+        <a href="/" class="logo">진워터</a>
+    </div>
+    <div class="logout">
+        <a href="/logout" class="btn-xs">로그아웃</a>
+    </div>
+    <ul class="sidebar-nav">
+        <li class="sidebar-item">
+            <label class="sidebar-label">기준정보관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/account/list}" class="sidebar-link"
+                   th:classappend="${active eq 'accountList' ? 'active' : ''}">거래처정보등록</a>
+                <a th:href="@{/material/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialList' ? 'active' : ''}">자재정보등록</a>
+                <a th:href="@{/product/list}" class="sidebar-link"
+                   th:classappend="${active == 'productList' ? 'active' : ''}">제품정보등록</a>
+                <a th:href="@{/inspectionCode/list}" class="sidebar-link"
+                   th:classappend="${active == 'inspectionCodeList' ? 'active' : ''}">검사항목 카테고리등록</a>
+                <a th:href="@{/inspectionContent/list}" class="sidebar-link"
+                   th:classappend="${active == 'inspectionContentList' ? 'active' : ''}">검사항목등록</a>
+                <a th:href="@{/user/list}" class="sidebar-link"
+                   th:classappend="${active == 'userList' ? 'active' : ''}">사용자관리</a>
+                <!--<a th:href="@{/user/list}" class="sidebar-link"
+                   th:classappend="${active == 'List5' ? 'active' : ''}">사용자권한관리</a>-->
+                <a th:href="@{/company/info}" class="sidebar-link companyPopup"
+                   th:classappend="${active == 'companyList' ? 'active' : ''}">회사정보등록</a>
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">자재관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/materialInbound/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialInboundList' ? 'active' : ''}">자재입고등록</a>
+                <a th:href="@{/materialSelf/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialSelfList' ? 'active' : ''}">자재자가처리등록</a>
+                <a th:href="@{/materialFeed/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialFeedList' ? 'active' : ''}">자재생산투입등록</a>
+                <a th:href="@{/materialFeedReturn/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialFeedReturnList' ? 'active' : ''}">투입자재반납등록</a>
+                <a th:href="@{/materialStockHistory/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialStockHistoryList' ? 'active' : ''}">자재 입/출고 현황</a>
+                <a th:href="@{/materialStock/list}" class="sidebar-link"
+                   th:classappend="${active == 'materialStockList' ? 'active' : ''}">자재재고조회</a>
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">제품관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/order/list}" class="sidebar-link"
+                   th:classappend="${active == 'orderList' ? 'active' : ''}">제품수주등록</a>
+                <a th:href="@{/shippingPlan/list}" class="sidebar-link"
+                   th:classappend="${active == 'shippingPlanList' ? 'active' : ''}">출하계획등록</a>
+                <a th:href="@{/productStockSelf/list}" class="sidebar-link"
+                   th:classappend="${active == 'productStockSelfUpdateList' ? 'active' : ''}">제품자가처리등록</a>
+                <a th:href="@{/productStock/list}" class="sidebar-link"
+                   th:classappend="${active == 'productStockList' ? 'active' : ''}">제품재고조회</a>
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">생산관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/workOrder/list}" class="sidebar-link"
+                   th:classappend="${active == 'workOrderList' ? 'active' : ''}">작업지시등록</a>
+                <a th:href="@{/dailyWorkOrder/list}" class="sidebar-link"
+                   th:classappend="${active == 'dailyWorkOrderList' ? 'active' : ''}">작업지시서 일별현황</a>
+                <a th:href="@{/production/list}" class="sidebar-link"
+                   th:classappend="${active == 'productionList' ? 'active' : ''}">생산실적등록</a>
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">출하관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/shipment/list}" class="sidebar-link"
+                   th:classappend="${active == 'shipmentList' ? 'active' : ''}">제품출하등록</a>
+                <a th:href="@{/dailyShipment/list}" class="sidebar-link"
+                   th:classappend="${active == 'dailyShipmentList' ? 'active' : ''}">기간별 출하현황</a>
+                <a th:href="@{/shipmentByProduct/list}" class="sidebar-link"
+                   th:classappend="${active == 'shipmentByProductList' ? 'active' : ''}">제품별 출하현황</a>
+                <!--<a th:href="@{/orderBill/list}" class="sidebar-link"
+                   th:classappend="${active == 'orderBillList' ? 'active' : ''}">거래명세표</a>-->
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">품질관리 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/inboundInspection/list}" class="sidebar-link"
+                   th:classappend="${active == 'inboundInspectionList' ? 'active' : ''}">수입검사관리</a>
+                <a th:href="@{/processInspection/list}" class="sidebar-link"
+                   th:classappend="${active == 'processInspectionList' ? 'active' : ''}">공정검사관리</a>
+                <a th:href="@{/shipmentInspection/list}" class="sidebar-link"
+                   th:classappend="${active == 'shipmentInspectionList' ? 'active' : ''}">최종검사관리</a>
+                <a th:href="@{/claim/list}" class="sidebar-link"
+                   th:classappend="${active == 'claimList' ? 'active' : ''}">클레임관리</a>
+            </nav>
+        </li>
+        <li class="sidebar-item">
+            <label class="sidebar-label">모니터링 ▼</label>
+            <nav class="sidebar-subItem">
+                <a th:href="@{/smokeData/dateList}" class="sidebar-link"
+                   th:classappend="${active == 'smokeDataList' ? 'active' : ''}">자동화장비 I/F</a>
+            </nav>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        $('.sidebar-item > label').click(function () {
+            let subItem = $(this).next('.sidebar-subItem');
+            let labelText = $(this).text();
+            if (subItem.is(':visible')) {
+                subItem.slideUp();
+                $(this).text(labelText.replace('▲', '▼'));
+            } else {
+                subItem.slideDown();
+                $(this).text(labelText.replace('▼', '▲'));
+            }
+            $(this).toggleClass('expanded');
+        });
+        let paramValue = '[[${active}]]';
+        if (paramValue) {
+            $('a.active').closest('li.sidebar-item').find('label').click();
+        }
+
+        $('.companyPopup').colorbox({
+            transition: "elastic",
+            speed: 150,
+            opacity: 0.6,
+            iframe: true,
+            width: "700px",
+            height: "480px",
+            onClosed: function () {
+                window.location.reload();
+            }
+        });
+    });
+</script>

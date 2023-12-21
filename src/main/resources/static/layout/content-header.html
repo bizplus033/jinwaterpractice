@@ -1,0 +1,11 @@
+<div class="content-header">
+    <div th:if="${navigation != null}">
+        <div th:each="title, status : ${navigation}" th:if="${status.index == #lists.size(navigation) - 1}">
+            <p class="title" th:text="${title}"></p>
+        </div>
+        <ol class="breadcrumb">
+            <li><i class="fa fa-home" aria-hidden="true"></i></li>
+            <li th:each="menu : ${navigation}" th:text="${menu}"></li>
+        </ol>
+    </div>
+</div>

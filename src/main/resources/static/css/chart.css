@@ -1,0 +1,15 @@
+.graph-wrap {
+    position: relative;
+}
+.graph-wrap .myChart2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    width: 100%;
+}
+.graph {
+    width: 100%;
+    overflow-x: scroll;
+}
+
