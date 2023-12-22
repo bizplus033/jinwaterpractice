@@ -87,35 +87,48 @@
 <script type="text/javascript">
     $(document).ready(function () {
         /* 체크박스 관련 */
+        // "checked_all" 체크박스가 변경이 되면
         $('input:checkbox[name="checked_all"]').on('change', function (e) {
+            // "idx[]" 체크박스를 this가 가리키는 "checked_all의 checked 속성대로 맞춰라
             $('input:checkbox[name="idx[]"]').prop('checked', $(this).prop('checked'));
         });
 
+        /* 모든 레코드의 체크가 되면 전체 체크박스고 체크가 되게끔 */
+        // 각 레코드의 체크 박스가 변경이 되면
         $('input:checkbox[name="idx[]"]').on('change', function (e) {
-            var totalCount = $('input:checkbox[name="idx[]"]').length;
-            var totalCheckedCount = $('input:checkbox[name="idx[]"]:checked').length;
+            var totalCount = $('input:checkbox[name="idx[]"]').length; // 전체 레코드 수
+            var totalCheckedCount = $('input:checkbox[name="idx[]"]:checked').length; // 체크가 된 레코드수
 
+            // 위 두 변수가 같다면 "checked_all"의 체크박스도 체크 시켜라
             $('input:checkbox[name="checked_all"]').prop('checked', (totalCount === totalCheckedCount));
         });
 
         /* 체크된 아이디 삭제 관련 */
         $('#btnDeleteUser').on('click', function () {
+            // 삭제할 사용자 아이디를 담을 배열을 초기화
             let checkValueArr = [];
+
+            // idx[] 이름의 체크박스 중 체크된 것들만 모두 선택
+            // $checkbox는 jQuery객체인데 일종의 배열이라고 생각하자.
             let $checkbox = $('input:checkbox[name="idx[]"]:checked');
 
+            // jQuery객체는 배열이므로 length 속성을 활용할 수 있다.
             for (let i = 0; i < $checkbox.length; i++) {
+                // 삭제할 사용자 아이디 배열에 하나씩 넣어준다.
                 checkValueArr.push($checkbox[i].value)
             }
+            // 체크된 박스가 없는데 "삭제하기"버튼을 누른 경우
             if ($checkbox.length == 0) {
                 alert('선택된 항목이 없습니다.');
                 return false;
             } else {
                 if (confirm($checkbox.length + " 개의 사용자 정보를 삭제하시겠습니까?")) {
+                    // YES를 눌렀다면 ajax로 /user/delete를 호출한다.
                     $.ajax({
                         url: "/user/delete",
                         type: 'POST',
-                        traditional: true,
-                        data: {'selectedId': checkValueArr}
+                        traditional: true, // jQuery 1.4.3 이전 버전과 호환성 유지하기 위해
+                        data: {'selectedId': checkValueArr} // 서버의 파라미터와 동일한 이름을 주자(selectedId)
                     }).done(function () {
                         window.location.reload();
                         alert($checkbox.length + " 개의 사용자 정보가 삭제되었습니다.")
