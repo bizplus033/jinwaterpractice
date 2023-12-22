@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User();
         user.setUserId(userId);
-        user.setUserId(encodedPassword);
+        user.setPassword(encodedPassword);
         user.setDeleteState(0); // 0 이 false 즉, 삭제 되지 않은 상태
         User saved = jpaUserRepository.save(user);
         log.info("{} : 회원가입이 완료 되었습니다.", saved.getUserId());

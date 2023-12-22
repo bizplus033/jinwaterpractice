@@ -8,6 +8,7 @@ import java.util.List;
 
 // 스프링 시큐리티가 제공하는 User 객체는 UserDetails 구현체
 // UserDetails를 구현한 객체를 서비스단에서 리턴해줘야 한다.
+// UserDetails(인터페이스) -> User(스프링 제공) -> UserAccount(내부에 우리 프로젝트 User엔티티)
 
 @Getter
 public class UserAccount extends User{

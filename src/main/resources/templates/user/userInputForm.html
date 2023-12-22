@@ -1,0 +1,191 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html"></head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='userList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:with="action=${user == null ? '/user/create' : '/user/edit'}">
+                    <form id="inputForm" name="inputForm" th:action="@{${action}}" method="post">
+                        <th:block th:if="${user != null}">
+                            <input type="hidden" name="id" th:value="${param.id}"/>
+                            <input type="hidden" name="userId" class="form-control xs" th:value="${user.userId}"/>
+                        </th:block>
+                        <table class="table-input xs">
+                            <colgroup>
+                                <col width="150px"/>
+                                <col width="*"/>
+                                <col width="150px"/>
+                                <col width="*"/>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>아이디 <strong style="color: red">*</strong></th>
+                                <td colspan="3" th:if="${user == null}">
+                                    <input type="text" name="userId" class="form-control xs userId"
+                                           placeholder="아이디를 입력해주세요"/>
+                                    <p id="checkUserId" size="2"></p>
+                                </td>
+                                <td colspan="3" th:if="${user != null}" th:text="${user.userId}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>사용자명 <strong style="color: red">*</strong></th>
+                                <td colspan="3"><input type="text" name="name" class="form-control xs"
+                                                       th:value="${user != null ? user.name : ''}"
+                                                       placeholder="사용자명을 입력해주세요."></td>
+                            </tr>
+                            <tr>
+                                <th>비밀번호 <strong style="color: red">*</strong></th>
+                                <td><input type="password" name="password" id="password" class="form-control xs"
+                                           value=""></td>
+                                <th>비밀번호 확인 <strong style="color: red">*</strong></th>
+                                <td><input type="password" name="passwordCheck" id="passwordCheck"
+                                           class="form-control xs" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>부서</th>
+                                <td><input type="text" name="department" class="form-control xs"
+                                           th:value="${user != null ? user.department : ''}"></td>
+                                <th>직책</th>
+                                <td><input type="text" name="position" class="form-control xs"
+                                           th:value="${user != null ? user.position : ''}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>전화</th>
+                                <td><input type="text" name="tel" class="form-control xs"
+                                           th:value="${user != null ? user.tel : ''}">
+                                </td>
+                                <th>휴대전화</th>
+                                <td><input type="text" name="phone" class="form-control xs"
+                                           th:value="${user != null ? user.phone : ''}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>e-mail</th>
+                                <td colspan="3"><input type="text" name="email" class="form-control xs"
+                                                       th:value="${user != null ? user.email : ''}"></td>
+                            </tr>
+                            <tr>
+                                <th rowspan="3">주소</th>
+                                <td colspan="3">
+                                    <input type="text" name="zipCode" class="form-control xs w-100"
+                                           th:value="${user != null ? user.zipCode : ''}" readonly placeholder="우편번호"/>
+                                    <button type="button" id="btnAddressSearch" class="btn btn-xs">
+                                        <i class="fa fa-search" aria-hidden="true"> 주소찾기</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <input type="text" name="address" class="form-control xs"
+                                           th:value="${user != null ? user.address : ''}"
+                                           readonly placeholder="주소"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <input type="text" name="addressDetail" class="form-control xs"
+                                           th:value="${user != null ? user.addressDetail : ''}" placeholder="상세주소"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비고</th>
+                                <td colspan="3">
+                                    <textarea name="etc" class="form-control xs"
+                                              th:text="${user != null ? user.etc : ''}"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-1 flex-content-between">
+                            <button type="button" id="btnBack" class="btn_back btn btn-default"
+                                    th:onclick="|location.href='/user/list'|">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                                목록으로
+                            </button>
+                            <button type="submit" id="btnQuestionSubmit" class="btn btn-primary">
+                                <i class="fa fa-pencil" aria-hidden="true"
+                                   th:text="${user == null ? ' 등록하기' : ' 수정하기'}"></i>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>-->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+    $('#btnAddressSearch').on('click', function (e) {
+        getAddressSearch(['zipCode', 'address', 'addressDetail'], 'inputForm');
+    });
+
+    $('.userId').focusout(function () {
+        let userId = $('.userId').val(); // input_id에 입력되는 값
+        console.log(userId);
+        $.ajax({
+            url: "/user/idCheck",
+            type: "POST",
+            data: {userId: userId},
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                if (userId != "") {
+                    if (result) {
+                        $("#checkUserId").css('color', 'red');
+                        $("#checkUserId").html('사용할 수 없는 아이디입니다.');
+                        return;
+                    } else {
+                        $("#checkUserId").css('color', 'green');
+                        $("#checkUserId").html('사용할 수 있는 아이디입니다.');
+                        return;
+                    }
+                } else {
+                    $("#checkUserId").html("");
+                }
+            },
+            error: function () {
+                alert("서버요청실패");
+            }
+        })
+
+    })
+
+    $(document).ready(function () {
+        $("#inputForm").validate({
+            rules: {
+                userId: "required",
+                password: {
+                    required: true,
+                    minlength: 4
+                },
+                passwordCheck: {
+                    equalTo: "#password",
+                },
+                name: "required"
+            },
+            messages: {
+                userId: "아이디를 입력해주세요.",
+                password: {
+                    required: "비밀번호를 입력해주세요.",
+                    minlength: "4자리 이상 입력해주세요."
+                },
+                passwordCheck: "비밀번호가 일치하지 않습니다",
+                name: "사용자명을 입력해주세요."
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+</html>

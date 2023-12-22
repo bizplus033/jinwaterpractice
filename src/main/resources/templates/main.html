@@ -1,0 +1,37 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active=${activeValue}"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg" style="height: 920px">
+                <div class="content-header">
+                    <p class="title mainDiv" style="color: #ffffff">메인</p>
+                    <div style="text-align: center; margin-top: 300px ">
+                        <img src="/images/logo.png" alt="로고">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    // window.onload = function() {
+    //     window.onresize = function() {
+    //         if (window.innerWidth <= 768) {
+    //             // 화면 너비가 768px 이하인 경우에 원하는 스타일을 적용
+    //             document.getElementsByClassName('mainDiv')[0].style.display = 'none';
+    //             document.getElementsByClassName('mainDiv')[1].style.width = '100%';
+    //         } else {
+    //             // 화면 너비가 768px 초과인 경우에 다른 스타일을 적용하거나 초기 스타일로 되돌릴 수 있음
+    //             document.getElementsByClassName('mainDiv')[0].style.display = '';
+    //             document.getElementsByClassName('mainDiv')[1].style.width = '88%';
+    //         }
+    //     };
+    // };
+</script>
+</html>

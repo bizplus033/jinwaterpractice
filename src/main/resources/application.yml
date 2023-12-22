@@ -49,6 +49,10 @@ spring:
     user:
       userId: admin
       password: 1234
+  security:
+    user:
+      name: user
+      password: 1111
 
 
 # spring security debug log

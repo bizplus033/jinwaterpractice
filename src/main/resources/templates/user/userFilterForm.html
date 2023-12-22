@@ -1,0 +1,43 @@
+<form method="get" th:action="@{/user/list}">
+    <table class="table-input">
+        <colgroup>
+            <col width="*">
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>사용자 아이디</th>
+            <td><input type="text" name="userId" class="form-control xs" th:value="${userId}"/></td>
+            <th>사용자 명</th>
+            <td><input type="text" name="name" class="form-control xs" th:value="${name}"/></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-1 mb-1 txt-right">
+        <button type="submit" class="btn">
+            <i class="fa fa-search" aria-hidden="true">검색하기</i>
+        </button>
+    </div>
+
+    <div class="flex-content-between mb-1">
+        <div class="ft-bold">
+            Total : [[${userPage.totalElements}]] 건
+        </div>
+        <div>
+            <th:block th:if="${#authentication.principal.username eq 'admin'}">
+                <button type="button" id="btnCreateUser" class="btn btn-primary popup" th:onclick="|location.href='/user/create'|">
+                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                    등록하기
+                </button>
+                <button type="button" id="btnDeleteUser" class="btn btn-danger">
+                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                    삭제하기
+                </button>
+            </th:block>
+            <!--<button type="button" class="btn btn-success" th:onclick="|'location.href=/userListExcel'|">
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                Excel 다운로드
+            </button>-->
+        </div>
+    </div>
+</form>
