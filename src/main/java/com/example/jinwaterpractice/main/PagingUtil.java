@@ -1,7 +1,8 @@
 package com.example.jinwaterpractice.main;
 
+import lombok.Getter;
 import org.springframework.data.domain.Page;
-
+@Getter
 public class PagingUtil<T> {
     private int blockSize;
     private int blockStartNo;

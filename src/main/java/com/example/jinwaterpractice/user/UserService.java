@@ -1,5 +1,6 @@
 package com.example.jinwaterpractice.user;
 
+import com.example.jinwaterpractice.user.dto.CreateUserRequest;
 import com.example.jinwaterpractice.user.dto.ListUserResponse;
 import com.example.jinwaterpractice.user.dto.UpdateUserRequest;
 import com.example.jinwaterpractice.user.dto.UserResponse;
@@ -41,7 +42,7 @@ public class UserService implements UserDetailsService {
     }
 
     /**
-     * 회원가입
+     * 회원가입 - 어드민용?
      * */
     @Transactional
     public void signup(String userId, String password) {
@@ -74,14 +75,14 @@ public class UserService implements UserDetailsService {
     /**
      * 회원 생성(가입)
      * */
-    // modelMapper 라이브러리가 id랑 userId랑 매핑 시키려고해서 타입미스매치 애러발생해서 커스텀 매퍼 사용
-//    @Transactional
-//    public void createUser(CreateUserRequest request) throws Exception {
-//        String encodedPassword = passwordEncoder.encode(request.getPassword());
-//        request.setPassword(encodedPassword);
-//        User entity = userMapper.toEntity(new User(), request);
-//        User userPS = jpaUserRepository.save(entity);
-//    }
+//     modelMapper 라이브러리가 id랑 userId랑 매핑 시키려고해서 타입미스매치 애러발생해서 커스텀 매퍼 사용
+    @Transactional
+    public void createUser(CreateUserRequest request) {
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        request.setPassword(encodedPassword);
+        User entity = userMapper.toEntity(new User(), request);
+        jpaUserRepository.save(entity);
+    }
     /**
      * userId가 있는지 없는지
      * */
