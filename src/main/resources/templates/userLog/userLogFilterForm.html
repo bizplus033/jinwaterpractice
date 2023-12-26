@@ -1,0 +1,30 @@
+<form method="get" th:action="@{/userLog/list}">
+    <table class="table-input">
+        <colgroup>
+            <col width="*">
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>사용자 아이디</th>
+            <td><input type="text" name="userId" class="form-control xs" th:value="${userId}"/></td>
+            <th>사용자 명</th>
+            <td><input type="text" name="userName" class="form-control xs" th:value="${userName}"/></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="mt-1 mb-1 txt-right">
+        <button type="submit" class="btn">
+            <i class="fa fa-search" aria-hidden="true">검색하기</i>
+        </button>
+    </div>
+
+    <div class="flex-content-between mb-1">
+        <div class="ft-bold">
+            Total :  [[${userLogPage.totalElements}]]건
+        </div>
+        <div>
+
+        </div>
+    </div>
+</form>

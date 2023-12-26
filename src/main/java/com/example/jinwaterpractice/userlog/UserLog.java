@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "user_log")

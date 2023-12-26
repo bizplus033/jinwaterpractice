@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='userLogList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:include="userLog/userLogFilterForm.html"/>
+                <table class="table-list full" style="text-align: center">
+                    <colgroup>
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>로그일시</th>
+                        <th>사용자아이디</th>
+                        <th>사용자이름</th>
+                        <th>사용구분</th>
+                        <th>접속 IP</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${userLogPage != null}">
+                        <tr th:each="userLog : ${userLogPage.content}">
+                            <td>[[${#temporals.format(userLog.logTime, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <td>[[${userLog.userId}]]</td>
+                            <td>[[${userLog.userName}]]</td>
+                            <td>[[${userLog.logType}]]</td>
+                            <td>[[${userLog.ipAddress}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <th:block th:if="${userLogPage != null}">
+                    <div class="pagination" th:if="${userLogPage.totalPages > 0}">
+                        <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                           th:href="@{/userLog/list(page=0, userId=${userId}, userName=${userName})}">
+                            처음
+                        </a>
+                        <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                           th:href="@{/userLog/list(page=${pagingUtil.blockStartNo - 2}, userId=${userId}, userName=${userName})}">
+                            이전
+                        </a>
+                        <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                           th:href="@{/userLog/list(page=${PageNo - 1}, userId=${userId}, userName=${userName})}"
+                           th:classappend="${(PageNo - 1) == userLogPage.number ? 'active' : ''}"
+                           th:styleappend="${(PageNo - 1) == userLogPage.number ? 'background-color: #808080;' : ''}"
+                           th:text="${PageNo}">
+                        </a>
+                        <a class="next" th:if="${userLogPage.totalPages > pagingUtil.blockEndNo}"
+                           th:href="@{/userLog/list(page=${pagingUtil.blockEndNo}, userId=${userId}, userName=${userName})}">
+                            다음
+                        </a>
+                        <a class="last" th:if="${userLogPage.totalPages > pagingUtil.blockEndNo}"
+                           th:href="@{/userLog/list(page=${userLogPage.totalPages - 1}, userId=${userId}, userName=${userName})}">
+                            마지막
+                        </a>
+                    </div>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
