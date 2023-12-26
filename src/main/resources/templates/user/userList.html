@@ -93,7 +93,7 @@
             $('input:checkbox[name="idx[]"]').prop('checked', $(this).prop('checked'));
         });
 
-        /* 모든 레코드의 체크가 되면 전체 체크박스고 체크가 되게끔 */
+        /* 모든 레코드의 체크가 되면 전체 체크박스가 체크가 되게끔 */
         // 각 레코드의 체크 박스가 변경이 되면
         $('input:checkbox[name="idx[]"]').on('change', function (e) {
             var totalCount = $('input:checkbox[name="idx[]"]').length; // 전체 레코드 수
@@ -110,6 +110,7 @@
 
             // idx[] 이름의 체크박스 중 체크된 것들만 모두 선택
             // $checkbox는 jQuery객체인데 일종의 배열이라고 생각하자.
+            // 관례적으로 jQuery객체에는 $로 시작한다.
             let $checkbox = $('input:checkbox[name="idx[]"]:checked');
 
             // jQuery객체는 배열이므로 length 속성을 활용할 수 있다.

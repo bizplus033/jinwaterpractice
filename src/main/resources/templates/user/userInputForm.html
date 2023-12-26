@@ -128,6 +128,10 @@
         getAddressSearch(['zipCode', 'address', 'addressDetail'], 'inputForm');
     });
 
+    /***
+     * 유저 아이디 유효성 검사
+     * */
+    // 유저 아이디가 포커스 아웃될 때
     $('.userId').focusout(function () {
         let userId = $('.userId').val(); // input_id에 입력되는 값
         console.log(userId);
@@ -136,14 +140,14 @@
             type: "POST",
             data: {userId: userId},
             dataType: 'json',
-            success: function (result) {
-                console.log(result);
+            success: function (result) { // 서버에 요청 성공시
+                console.log(result); // true면 기존에 있는 아이디, false이면 기존에 없는 아이디
                 if (userId != "") {
-                    if (result) {
+                    if (result) { // 입력한 아이디가 기존에 있는 경우
                         $("#checkUserId").css('color', 'red');
                         $("#checkUserId").html('사용할 수 없는 아이디입니다.');
                         return;
-                    } else {
+                    } else { // 입력한 아이디가 기존에 없는 경우
                         $("#checkUserId").css('color', 'green');
                         $("#checkUserId").html('사용할 수 있는 아이디입니다.');
                         return;
@@ -158,7 +162,9 @@
         })
 
     })
-
+    /**
+     * 입력 폼 전체 유효성 체크
+     * */
     $(document).ready(function () {
         $("#inputForm").validate({
             rules: {
