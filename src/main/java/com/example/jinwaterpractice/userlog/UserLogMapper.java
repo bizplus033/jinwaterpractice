@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * */
 @Component
 public class UserLogMapper {
-    // todo 이건 리팩토링 하는게 좋아 보인다.
+    //  이건 리팩토링 하는게 좋아 보인다.
     public ListUserLogResponse toListUserLogResponse(UserLog userLog) {
         return new ListUserLogResponse(
                 userLog.getCreatedAt(),

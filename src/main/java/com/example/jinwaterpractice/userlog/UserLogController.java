@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class UserLogController {
     private List<String> navigationList;
     private final UserLogService userLogService;
 
-    // todo 코드는 복사되는 게 아니라 재사용 되어야 한다.
+    // 코드는 복사되는 게 아니라 재사용 되어야 한다.
     private List<String> setNavigation() {
         List<String> navigation = new ArrayList<>();
         navigation.add("기준정보관리");
@@ -53,8 +54,8 @@ public class UserLogController {
     }
 
     // 로그아웃 버튼을 누르면
-    // todo Authentication 객체를 가져오려면 @Authentication을 사용하는 것이 나아 보이는데
-    @GetMapping("/logout")
+    // Authentication 객체를 가져오려면 @Authentication을 사용하는 것이 나아 보이는데
+    // @GetMapping("/logout")
     public String createUserLogOfLogout(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // 로그인이 되어 있다면
@@ -64,6 +65,20 @@ public class UserLogController {
         }
         return "redirect:/logout";
     }
+
+    /**
+     * 로그아웃 V2
+     * @AuthenticationPrincipal
+     * */
+    @GetMapping("/logout")
+    public String createUserLogOfLogout(HttpServletRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String username = userDetails.getUsername();
+            userLogService.createUserLogoutV2(request, username);
+        }
+        return "redirect:/logout";
+    }
+
 
 
 }
