@@ -15,7 +15,7 @@ public class LoginController {
     public String loginForm(HttpServletRequest request) {
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         if (user != null && !user.equals("anonymousUser")) {
-            return "redirect:/list";
+            return "redirect:/";
         }
         return "login";
     }
