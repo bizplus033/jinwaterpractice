@@ -1,0 +1,161 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active=${activeValue}"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:with="action=${account == null ? '/account/create' : '/account/edit'}">
+                    <form id="inputForm" name="inputForm" method="POST" th:action="@{${action}}">
+                        <input type="hidden" name="id" th:if="${account != null}" th:value="${account.id}">
+                        <table class="table-input xs">
+                            <colgroup>
+                                <col width="150px">
+                                <col width="*">
+                                <col width="150px">
+                                <col width="*">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>거래처코드</th>
+                                <td>
+                                    <input type="text" id="code" name="code" class="form-control xs"
+                                           th:readonly="true" style="background-color: #cbd5e0"
+                                           th:value="${account != null ? account.code : accountCode}">
+                                </td>
+                                <th>유형</th>
+                                <td>
+                                    <select id="type" name="type" class="form-control xs">
+                                        <option value="매입처" th:selected="${account != null && account.type == '매입처'}">매입처
+                                        </option>
+                                        <option value="매출처" th:selected="${account != null && account.type == '매출처'}">매출처
+                                        </option>
+                                        <option value="기타" th
+
+                                                :selected="${account != null && account.type == '기타'}">기타
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>거래처명 <strong style="color: red">*</strong></th>
+                                <td colspan="3">
+                                    <input type="text" name="name" class="form-control xs"
+                                           th:value="${account != null} ? ${account.name} : ''"
+                                           placeholder="거래처명을 입력해주세요.">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>사업자번호</th>
+                                <td>
+                                    <input type="text" name="businessNumber" class="form-control xs"
+                                           th:value="${account != null} ? ${account.businessNumber} : ''">
+                                </td>
+                                <th>대표</th>
+                                <td>
+                                    <input type="text" name="ceo" class="form-control xs"
+                                           th:value="${account != null} ? ${account.ceo} : ''">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>업종</th>
+                                <td>
+                                    <input type="text" name="businessType" class="form-control xs"
+                                           th:value="${account != null} ? ${account.businessType} : ''">
+                                </td>
+                                <th>업태</th>
+                                <td>
+                                    <input type="text" name="businessCategory" class="form-control xs"
+                                           th:value="${account != null} ? ${account.businessCategory} : ''">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>전화</th>
+                                <td>
+                                    <input type="text" name="tel" class="form-control xs"
+                                           th:value="${account != null} ? ${account.tel} : ''">
+                                </td>
+                                <th>Fax</th>
+                                <td>
+                                    <input type="text" name="fax" class="form-control xs"
+                                           th:value="${account != null} ? ${account.fax} : ''">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>이메일</th>
+                                <td colspan="3">
+                                    <input type="text" name="email" class="form-control xs"
+                                           th:value="${account != null} ? ${account.email} : ''">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th rowspan="3">주소</th>
+                                <td colspan="3">
+                                    <input type="text" name="zipCode" class="form-control xs w-100"
+                                           th:value="${account != null} ? ${account.zipCode} : ''" readonly placeholder="우편번호">
+                                    <button type="button" id="btnAddressSearch" class="btn btn-xs">
+                                        <i class="fa fa-search" aria-hidden="true"> 주소찾기</i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <input type="text" name="address" class="form-control xs"
+                                           th:value="${account != null} ? ${account.address} : ''" readonly placeholder="주소">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <input type="text" name="addressDetail" class="form-control xs"
+                                           th:value="${account != null} ? ${account.addressDetail} : ''" placeholder="상세주소">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비고</th>
+                                <td colspan="3">
+                                    <input type="text" name="etc" class="form-control xs"
+                                           th:value="${account != null} ? ${account.etc} : ''">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-1 flex-content-between">
+                            <button type="button" id="btnBack" class="btn_back btn btn-default"
+                                    th:onclick="|location.href='/account/list'|">
+                                <i class="fa fa-arrow-left" aria-hidden="true"> 이전페이지</i>
+                            </button>
+
+                            <button type="submit" id="btnQuestionSubmit" class="btn btn-primary">
+                                <i class="fa fa-pencil" aria-hidden="true"> [[${account == null ? '저장하기' : '수정하기'}]]</i>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#inputForm").validate({
+            rules: {
+                name: "required"
+            }, messages: {
+                name: "거래처명을 입력해 주세요."
+            }
+        });
+
+        $('#btnAddressSearch').on('click', function (e) {
+            getAddressSearch(['zipCode', 'address', 'addressDetail'], 'inputForm');
+        });
+    });
+</script>
+</html>

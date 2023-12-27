@@ -1,0 +1,141 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div id="content">
+    <th:block th:include="../static/layout/content-header.html"/>
+    <div class="box box-bg">
+        <p class="title">거래처 정보 관리</p>
+        <div class="popupList">
+            <form method="GET" action="/account/popupList">
+                <input type="hidden" name="value" th:value="${param.value}"/>
+                <table class="table-input">
+                    <colgroup>
+                        <col width="10%">
+                        <col width="22%">
+                        <col width="10%">
+                        <col width="22%">
+                        <col width="10%">
+                        <col width="*">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>유형</th>
+                        <td>
+                            <select name="type" class="form-control xs">
+                                <option th:selected="${type == ''}" value="">전체</option>
+                                <option th:selected="${type == '매입처'}" value="매입처">매입처</option>
+                                <option th:selected="${type == '매출처'}" value="매출처">매출처</option>
+                                <option th:selected="${type == '기타'}" value="기타">기타</option>
+                            </select>
+                        </td>
+                        <th>거래처코드</th>
+                        <td>
+                            <input type="text" name="code" class="form-control xs" th:value="${code}"/>
+                        </td>
+                        <th>거래처명</th>
+                        <td>
+                            <input type="text" name="name" class="form-control xs" th:value="${name}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-1 mb-1 txt-right">
+                    <button type="submit" class="btn">
+                        <i class="fa fa-search" aria-hidden="true">검색하기</i>
+                    </button>
+                </div>
+
+                <div class="flex-content-between mb-1">
+                    <div class="ft-bold">
+                        Total : [[${accountPage.totalElements}]] 건
+                    </div>
+                </div>
+
+                <table class="table-list full">
+                    <colgroup>
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                        <col width="100px">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>거래처코드</th>
+                        <th>거래처명</th>
+                        <th>사업자번호</th>
+                        <th>유형</th>
+                        <th>대표자</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${accountPage != null}">
+                        <tr style="cursor: pointer;" th:each="account : ${accountPage.content}"
+                            onclick="accountSelect(this)" th:data-value="${account.id}">
+                            <td class="txt-center">[[${account.code}]]</td>
+                            <td class="txt-center">[[${account.name}]]</td>
+                            <td class="txt-center">[[${account.businessNumber}]]</td>
+                            <td class="txt-center">[[${account.type}]]</td>
+                            <td class="txt-center">[[${account.ceo}]]</td>
+                            <td class="txt-center">[[${account.etc}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </form>
+
+            <div class="pagination" th:if="${accountPage.totalPages > 0}" th:with="value=${param.value}">
+                <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                   th:href="@{/account/popupList(page=0, type=${type}, value=${value}, code=${code}, name=${name})}">
+                    처음
+                </a>
+                <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                   th:href="@{/account/popupList(page=${pagingUtil.blockStartNo - 2}, value=${value}, type=${type}, code=${code}, name=${name})}">
+                    이전
+                </a>
+                <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                   th:href="@{/account/popupList(page=${PageNo - 1}, value=${value}, type=${type}, code=${code}, name=${name})}"
+                   th:classappend="${(PageNo - 1) == accountPage.number ? 'active' : ''}"
+                   th:styleappend="${(PageNo - 1) == accountPage.number ? 'background-color: #808080;' : ''}"
+                   th:text="${PageNo}">
+                </a>
+                <a class="next" th:if="${accountPage.totalPages > pagingUtil.blockEndNo}"
+                   th:href="@{/account/popupList(page=${pagingUtil.blockEndNo}, value=${value}, type=${type}, code=${code}, name=${name})}">
+                    다음
+                </a>
+                <a class="last" th:if="${accountPage.totalPages > pagingUtil.blockEndNo}"
+                   th:href="@{/account/popupList(page=${accountPage.totalPages - 1}, value=${value}, type=${type}, code=${code}, name=${name})}">
+                    마지막
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    function accountSelect(obj) {
+        const val = /*[[${param.value}]]*/ '';
+        let tdContents = obj.getElementsByTagName('td');
+
+        let id = obj.getAttribute('data-value');
+        let code = tdContents[0].innerText.trim();
+        let name = tdContents[1].innerText.trim();
+
+        window.close();
+        if (val == 1) {
+            window.opener.document.getElementById('accountId').value = id;
+            window.opener.document.getElementById('accountName').value = name;
+            window.opener.document.getElementById('accountCode').value = code;
+        } else if (val == 2) {
+            window.opener.document.getElementById('accountId').value = id;
+            window.opener.document.getElementById('accountName').value = name;
+        } else {
+
+        }
+    }
+</script>
+</html>

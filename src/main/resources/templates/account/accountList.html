@@ -1,0 +1,136 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='accountList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:include="/account/accountFilterForm.html"/>
+
+                <table class="table-list full" style="text-align: center">
+                    <colgroup>
+                        <col width="50px">
+                        <col width="120px">
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="*">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" name="checked_all"/></th>
+                        <th>유형</th>
+                        <th>거래처코드</th>
+                        <th>거래처명</th>
+                        <th>사업자번호</th>
+                        <th>대표자</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${accountPage != null}">
+                        <tr th:each="account : ${accountPage.content}">
+                            <td class="txt-center">
+                                <input class="deleteSelected" type="checkbox" name="idx[]" th:value="${account.id}"/>
+                            </td>
+                            <td>[[${account.type}]]</td>
+                            <td>
+                                <a th:href="@{/account/edit(id=${account.id})}">[[${account.code}]]</a>
+                            </td>
+                            <td>[[${account.name}]]</td>
+                            <td>[[${account.businessNumber}]]</td>
+                            <td>[[${account.ceo}]]</td>
+                            <td>[[${account.etc}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <div class="pagination" th:if="${accountPage.totalPages > 0}">
+                    <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/account/list(page=0, type=${type}, code=${code}, name=${name})}">
+                        처음
+                    </a>
+                    <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/account/list(page=${pagingUtil.blockStartNo - 2}, type=${type}, code=${code}, name=${name})}">
+                        이전
+                    </a>
+                    <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                       th:href="@{/account/list(page=${PageNo - 1}, type=${type}, code=${code}, name=${name})}"
+                       th:classappend="${(PageNo - 1) == accountPage.number ? 'active' : ''}"
+                       th:styleappend="${(PageNo - 1) == accountPage.number ? 'background-color: #808080;' : ''}"
+                       th:text="${PageNo}">
+                    </a>
+                    <a class="next" th:if="${accountPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/account/list(page=${pagingUtil.blockEndNo}, type=${type}, code=${code}, name=${name})}">
+                        다음
+                    </a>
+                    <a class="last" th:if="${accountPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/account/list(page=${accountPage.totalPages - 1}, type=${type}, code=${code}, name=${name})}">
+                        마지막
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input:checkbox[name="checked_all"]').on('change', function (e) {
+            $('input:checkbox[name="idx[]"]').prop('checked', $(this).prop('checked'));
+        });
+
+        $('input:checkbox[name="idx[]"]').on('change', function (e) {
+            var totalCount = $('input:checkbox[name="idx[]"]').length;
+            var totalCheckedCount = $('input:checkbox[name="idx[]"]:checked').length;
+
+            $('input:checkbox[name="checked_all"]').prop('checked', (totalCount === totalCheckedCount));
+        });
+
+        $('#btnDeleteAccount').on('click', function () {
+            let checkValueArr = [];
+            let $checkbox = $('input:checkbox[name="idx[]"]:checked');
+
+            for (let i = 0; i < $checkbox.length; i++) {
+                checkValueArr.push($checkbox[i].value)
+            }
+            if ($checkbox.length == 0) {
+                alert('선택된 항목이 없습니다.');
+                return false;
+            } else {
+                if (confirm($checkbox.length + " 개의 거래처 정보를 삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: "/account/delete",
+                        type: 'POST',
+                        traditional: true,
+                        data: {'selectedId': checkValueArr}
+                    }).done(function () {
+                        window.location.reload();
+                        alert($checkbox.length + " 개의 거래처 정보를 삭제되었습니다.")
+                    }).error(function (){
+                        window.location.reload();
+                        alert($checkbox.length + " 개의 거래처 정보를 삭제되었습니다.error")
+                    })
+                } else {
+                    window.location.reload();
+                }
+            }
+            console.log('btnDeleteAccount')
+        });
+    });
+</script>
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+</html>
