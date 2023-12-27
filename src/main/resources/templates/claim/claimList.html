@@ -1,0 +1,107 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='claimList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:include="claim/claimFilterForm.html"/>
+                <table class="table-list full" style="text-align: center">
+                    <colgroup>
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="500px">
+                        <col width="*">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>접수일자</th>
+                        <th>거래처</th>
+                        <th>접수내용</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${claimPage != null}">
+                        <tr th:each="claim : ${claimPage.content}">
+                            <td class="txt-center">[[${#temporals.format(claim.receiptDate, 'yyyy-MM-dd')}]]</td>
+                            <td class="txt-center">[[${claim.accountName}]]</td>
+                            <td class="txt-center">
+                                <a class="popup" th:href="|/claim/edit?id=${claim.id}|">
+                                    [[${claim.receiptContent}]]
+                                </a>
+                            </td>
+                            <td class="txt-center">[[${claim.etc}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <div class="pagination" th:if="${claimPage.totalPages > 0}">
+                    <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/claim/list(page=0, accountName=${accountName},
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
+                        처음
+                    </a>
+                    <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/claim/list(page=${pagingUtil.blockStartNo - 2}, accountName=${accountName},
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
+                        이전
+                    </a>
+                    <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                       th:href="@{/claim/list(page=${PageNo - 1}, accountName=${accountName},
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}"
+                       th:classappend="${(PageNo - 1) == claimPage.number ? 'active' : ''}"
+                       th:styleappend="${(PageNo - 1) == claimPage.number ? 'background-color: #808080;' : ''}"
+                       th:text="${PageNo}">
+                    </a>
+                    <a class="next" th:if="${claimPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/claim/list(page=${pagingUtil.blockEndNo}, accountName=${accountName},
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
+                        다음
+                    </a>
+                    <a class="last" th:if="${claimPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/claim/list(page=${claimPage.totalPages - 1}, accountName=${accountName},
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
+                        마지막
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.popup').colorbox({
+            transition: "elastic",
+            speed: 150,
+            opacity: 0.6,
+            iframe: true,
+            width: "600px",
+            height: "300px",
+            onClosed: function () {
+                window.location.reload();
+            }
+        });
+    });
+    function closePopup() {
+        $('.popup').colorbox.close();
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 160);
+    }
+</script>
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+</html>

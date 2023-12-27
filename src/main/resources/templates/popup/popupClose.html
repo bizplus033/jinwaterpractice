@@ -1,0 +1,17 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>Popup Close</title>
+</head>
+<body>
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+<script type="text/javascript">
+    parent.closePopup();
+</script>
+</body>
+</html>

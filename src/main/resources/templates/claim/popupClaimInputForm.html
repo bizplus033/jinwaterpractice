@@ -1,0 +1,77 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html"></head>
+<body>
+<div class="box box-bg">
+    <div class="content-header">
+        <p class="title" th:text="${claim == null ? '클레임 접수하기' : '클레임 수정하기'}"></p>
+    </div>
+    <form name="inputForm" method="post"
+          th:with="action = ${claim == null ? '/claim/create' : '/claim/edit'}"
+          th:action="${action}">
+        <th:block th:if="${claim != null}">
+            <input type="hidden" name="id" th:value="${claim.id}">
+        </th:block>
+        <table class="table-input xs">
+            <tbody>
+            <tr>
+                <th>거래처 <strong style="color: red">*</strong></th>
+                <td>
+                    <input type="text" id="accountName" name="accountName" class="form-control xs"
+                           th:value="${claim != null ? claim.accountName : ''}"
+                           onclick="accountListPopup(2)" placeholder="거래처를 선택해주세요." readonly/>
+                    <input type="hidden" id="accountId" name="accountId"
+                           th:value="${claim != null ? claim.accountId : ''}">
+                </td>
+            </tr>
+            <tr>
+                <th>접수 일자 <strong style="color: red">*</strong></th>
+                <td>
+                    <input type="text" id="receiptDate" name="receiptDate" class="form-control xs"
+                           th:value="${claim != null
+                           ? #temporals.format(claim.receiptDate, 'yyyy-MM-dd')
+                           : #temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" readonly/>
+                </td>
+            </tr>
+            <tr>
+                <th>접수 내용 <strong style="color: red">*</strong></th>
+                <td>
+                    <input type="text" id="receiptContent" name="receiptContent" class="form-control xs"
+                           th:value="${claim != null ? claim.receiptContent : ''}"
+                           placeholder="접수내용을 입력해주세요."/>
+                </td>
+            </tr>
+            <tr>
+                <th>비고 </th>
+                <td>
+                    <input type="text" name="etc" class="form-control xs"
+                           th:value="${claim != null ? claim.etc : ''}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="mt-1 flex-content-center">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-pencil" aria-hidden="true"></i>
+                [[${claim == null ? '등록하기' : '수정하기'}]]
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form[name="inputForm"]').validate({
+            rules: {
+                accountName: "required",
+                receiptDate: "required",
+                receiptContent: "required"
+            }, messages: {
+                accountName: "거래처를 선택해주세요.",
+                receiptDate: "접수일자를 선택해주세요.",
+                receiptContent: "접수내용을 입력해주세요."
+            }
+        });
+    });
+</script>
+</html>
