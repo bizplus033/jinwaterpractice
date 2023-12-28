@@ -1,8 +1,11 @@
 package com.example.jinwaterpractice.orderdetail;
 
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -20,12 +23,46 @@ public class DslOrderDetailRepositoryImpl implements DslOrderDetailRepository{
 
     @Override
     public Page<OrderDetail> findOrderDetailAllBySearchKeyword(String orderCode, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-        return null;
+        List<OrderDetail> content = query.selectFrom(orderDetail)
+                .where(likeOrderCodeIgnoreCase(orderCode)
+                        .and(goeStartDate(startDate))
+                        .and(loeEndDate(endDate))
+                )
+                .orderBy(orderDetail.order.orderDate.desc())
+                .orderBy(orderDetail.createdAt.desc())
+                .limit(pageable.getPageSize())
+                .offset(pageable.getOffset())
+                .fetch();
+
+        Long total = query.select(orderDetail.count())
+                .where(likeOrderCodeIgnoreCase(orderCode)
+                        .and(goeStartDate(startDate))
+                        .and(loeEndDate(endDate))
+                )
+                .fetchOne();
+
+        if (total == null) total = 0L;
+        return new PageImpl<>(content, pageable, total);
+    }
+
+    private BooleanExpression loeEndDate(LocalDate endDate) {
+        return endDate != null ? orderDetail.order.orderDate.loe(endDate) : null;
+    }
+
+    private  BooleanExpression goeStartDate(LocalDate startDate) {
+        return startDate != null ? orderDetail.order.orderDate.goe(startDate) : null;
+    }
+
+    private BooleanExpression likeOrderCodeIgnoreCase(String orderCode) {
+        return orderDetail.order.code.likeIgnoreCase("%" + ((orderCode == null) ? "" : orderCode) + "%");
     }
 
     @Override
     public List<OrderDetail> findOrderDetailByOrderId(Long orderId) {
-        return null;
+        return query.selectFrom(orderDetail)
+                .where(orderDetail.deleteState.eq(0)
+                        .and(orderDetail.order.id.eq(orderId)))
+                .fetch();
     }
 
     @Override

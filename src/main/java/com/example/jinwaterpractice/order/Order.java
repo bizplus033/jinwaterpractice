@@ -66,4 +66,8 @@ public class Order {
     @Transient
     private Integer totalOrderAmount;
 
+    public void updateOrderState(int status) {
+        this.state = status;
+    }
+
 }

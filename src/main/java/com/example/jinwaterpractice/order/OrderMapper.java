@@ -50,7 +50,7 @@ public class OrderMapper {
         return newOrder;
     }
 
-    public Order toEntity(UpdateOrderRequest request, Account account, Order order) {
+    public Order toEntityForUpdate(UpdateOrderRequest request, Account account, Order order) {
         order.setAccount(account);
         order.setCode(request.getOrderCode());
         order.setManager(request.getManager());
