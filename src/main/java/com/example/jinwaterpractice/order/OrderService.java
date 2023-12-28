@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -95,6 +97,25 @@ public class OrderService {
             return listOrder.get(0).getCode();
         }
         return null;
+    }
+
+    // 0_yyMMdd_n 형식 수주코드 생성
+    public String createOrderCode(String orderCode){
+        String newOrderCode = "0_";
+
+        // 오늘 날짜로 생성된 코드가 없다면
+        if (orderCode == null) {
+            LocalDate now = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
+            newOrderCode += formatter.format(now) + "_1";
+            return newOrderCode;
+        } else {
+            // 있으면
+            int index = orderCode.lastIndexOf("_");
+            int num = Integer.parseInt(orderCode.substring(index + 1)) + 1;
+            newOrderCode += orderCode.substring(2, index + 1) + String.valueOf(num);
+            return newOrderCode;
+        }
     }
 
 }

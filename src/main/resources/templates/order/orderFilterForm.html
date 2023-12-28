@@ -1,0 +1,68 @@
+<form name="inputForm" method="GET" action="/order/list">
+    <table class="table-input">
+        <colgroup>
+            <col width="10%">
+            <col width="15%">
+            <col width="10%">
+            <col width="15%">
+            <col width="10%">
+            <col width="15%">
+            <col width="10%">
+            <col width="*">
+        </colgroup>
+        <tbody>
+        <tr>
+            <th>수주코드</th>
+            <td>
+                <input name="orderCode" class="form-control xs" th:value="${orderCode}">
+            </td>
+            <th>거래처</th>
+            <td>
+                <input name="accountName" class="form-control xs" th:value="${accountName}">
+            </td>
+            <th>상태</th>
+            <td>
+                <select name="orderState" class="form-control xs">
+                    <option th:selected="${orderState == ''}" value="" >전체</option>
+                    <option th:selected="${orderState == '0'}" value="0" >수주 접수</option>
+                    <option th:selected="${orderState == '1'}" value="1" >출하 완료</option>
+                </select>
+            </td>
+            <th>접수일</th>
+            <td class="flex-content-between">
+                <input type="text" id="startDate" name="startDate" class="form-control xs"
+                       th:value="${#dates.format(startDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
+                <span class="ft-3 ml-2 mr-2"> - </span>
+                <input type="text" id="endDate" name="endDate" class="form-control xs"
+                       th:value="${#dates.format(endDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="mt-1 mb-1 txt-right">
+        <button type="submit" class="btn">
+            <i class="fa fa-search" aria-hidden="true"> 검색하기</i>
+        </button>
+    </div>
+    <div class="flex-content-between mb-1">
+        <div class="ft-bold">
+            Total : [[${orderPage.totalElements}]] 건
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" th:onclick="|location.href='/order/create'|">
+                <i class="fa fa-pencil" aria-hidden="true"> 등록하기</i>
+            </button>
+            <button type="button" id="btnDeleteOrder" class="btn btn-danger">
+                <i class="fa fa-trash-o" aria-hidden="true"> 삭제하기</i>
+            </button>
+            <!--<button type="button" class="btn btn-success" th:onclick="|location.href='/productOrderListExcel'|">
+                <i class="fa fa-file-excel-o" aria-hidden="true"> Excel 다운로드</i>
+            </button>-->
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        settingDatePicker(['startDate', 'endDate'], 'inputForm')
+    })
+</script>

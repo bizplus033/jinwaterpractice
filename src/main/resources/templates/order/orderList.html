@@ -1,0 +1,151 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='orderList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:include="order/orderFilterForm.html"/>
+                <table class="table-list full" style="text-align: center">
+                    <colgroup>
+                        <col width="50px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="150px">
+                        <col width="*">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" name="checked_all"/></th>
+                        <th>수주 코드</th>
+                        <th>거래처</th>
+                        <th>담당자</th>
+                        <th>접수일</th>
+                        <th>출고예정일</th>
+                        <th>수주 수량</th>
+                        <th>수주 상태</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${orderPage != null}">
+                        <tr th:each="order : ${orderPage.content}">
+                            <td class="txt-center">
+                                <input type="checkbox" name="idx[]" id="idx[]" th:value="${order.orderId}">
+                            </td>
+                            <td class="txt-center">
+                                <a th:href="@{/order/edit(id=${order.orderId})}">[[${order.orderCode}]]</a>
+                            </td>
+                            <td class="txt-center">[[${order.accountName}]]</td>
+                            <td class="txt-center">[[${order.manager}]]</td>
+                            <td class="txt-center">[[${#dates.format(order.orderDate, 'yyyy-MM-dd')}]]</td>
+                            <td class="txt-center">[[${#dates.format(order.releaseDate, 'yyyy-MM-dd')}]]</td>
+                            <td class="txt-center" th:text="${#numbers.formatInteger(order.orderAmount, 1, 'COMMA')}"></td>
+                            <td class="txt-center">
+                                <th:block th:switch="${order.orderState}">
+                                    <strong th:case="0" style="color: red">수주 접수</strong>
+                                    <strong th:case="1" style="color: blue">출하 완료</strong>
+                                </th:block>
+                            </td>
+                            <td class="txt-center">[[${order.etc}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <div class="pagination" th:if="${orderPage.totalPages > 0}">
+                    <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/order/list(page=0, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
+                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                        처음
+                    </a>
+                    <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                       th:href="@{/order/list(page=${pagingUtil.blockStartNo - 2}, orderCode=${orderCode}, accountName=${accountName},
+                       orderState=${orderState}, startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                        이전
+                    </a>
+                    <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                       th:href="@{/order/list(page=${PageNo - 1}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
+                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}"
+                       th:classappend="${(PageNo - 1) == orderPage.number ? 'active' : ''}"
+                       th:styleappend="${(PageNo - 1) == orderPage.number ? 'background-color: #808080;' : ''}"
+                       th:text="${PageNo}">
+                    </a>
+                    <a class="next" th:if="${orderPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/order/list(page=${pagingUtil.blockEndNo}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
+                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                        다음
+                    </a>
+                    <a class="last" th:if="${orderPage.totalPages > pagingUtil.blockEndNo}"
+                       th:href="@{/order/list(page=${orderPage.totalPages - 1}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
+                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                        마지막
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        /* 체크박스 관련 */
+        $('input:checkbox[name="checked_all"]').on('change', function (e) {
+            $('input:checkbox[name="idx[]"]').prop('checked', $(this).prop('checked'));
+        });
+
+        $('input:checkbox[name="idx[]"]').on('change', function (e) {
+            var totalCount = $('input:checkbox[name="idx[]"]').length;
+            var totalCheckedCount = $('input:checkbox[name="idx[]"]:checked').length;
+
+            $('input:checkbox[name="checked_all"]').prop('checked', (totalCount === totalCheckedCount));
+        });
+
+        /* 체크된 리스트 삭제 관련 */
+        $('#btnDeleteOrder').on('click', function () {
+            let checkValueArr = [];
+            let $checkbox = $('input:checkbox[name="idx[]"]:checked');
+
+            for (let i = 0; i < $checkbox.length; i++) {
+                checkValueArr.push($checkbox[i].value)
+            }
+            if ($checkbox.length == 0) {
+                alert('선택된 항목이 없습니다.');
+                return false;
+            } else {
+                if (confirm($checkbox.length + " 개의 수주 정보를 삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: "/order/delete",
+                        type: 'POST',
+                        traditional: true,
+                        data: {'selectedId': checkValueArr}
+                    }).done(function () {
+                        window.location.reload();
+                        alert($checkbox.length + " 개의 수주 정보가 삭제되었습니다.")
+                    }).error(function () {
+                        window.location.reload();
+                        alert($checkbox.length + " 개의 수주 정보가 삭제되었습니다.(error)")
+                    })
+                } else {
+                    window.location.reload();
+                }
+            }
+        });
+    });
+</script>
+<!--수정 했을 때 메세지 뜨나 안뜨나 해본거 -->
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+</html>

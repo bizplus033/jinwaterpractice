@@ -1,0 +1,155 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html"></head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='orderList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:with="action=${order == null ? '/order/create' : '/order/edit'}">
+                    <form name="inputForm" method="POST" th:action="${action}">
+                        <input type="hidden" name="orderId" th:value="${order != null ? order.orderId : ''}">
+                        <table class="table-input xs">
+                            <colgroup>
+                                <col width="150px">
+                                <col width="*">
+                                <col width="150px">
+                                <col width="*">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>수주 코드 </th>
+                                <td>
+                                    <th:block th:if="${order == null}">
+                                        <input type="text" id="orderCode" name="orderCode" class="form-control xs"
+                                               th:value="${newOrderCode}" style="background-color: #e5e5e5" readonly/>
+                                    </th:block>
+                                    <th:block th:if="${order != null}">
+                                        <input type="hidden" name="orderCode" th:value="${order.orderCode}"/>
+                                        [[${order.orderCode}]]
+                                    </th:block>
+                                </td>
+                                <th>담당자</th>
+                                <td>
+                                    <input type="text" name="manager" class="form-control xs" th:if="${order == null}"
+                                           th:value="${#authentication.principal.username}" style="background-color: #e5e5e5" readonly>
+                                    <input type="text" name="manager" class="form-control xs" th:if="${order != null}"
+                                           th:value="${order.manager}" style="background-color: #e5e5e5" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>거래처코드</th>
+                                <td>
+                                    <input type="text" id="accountCode" name="accountCode" class="form-control xs"
+                                           style="background-color: #e5e5e5"
+                                           th:value="${order != null ? order.accountCode : ''}" readonly/>
+                                </td>
+                                <th>거래처명 <strong style="color: red">*</strong></th>
+                                <td>
+                                    <input type="text" id="accountName" name="accountName" class="form-control xs"
+                                           onclick="accountListPopup2(1)" th:value="${order != null ? order.accountName : ''}"
+                                           placeholder="거래처를 선택해주세요." readonly/>
+                                    <input type="hidden" id="accountId" name="accountId" class="form-control xs"
+                                           th:value="${order != null ? order.accountId : ''}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>수주 수량</th>
+                                <td colspan="4">
+                                    <input type="text" name="orderAmount" class="form-control xs"
+                                           style="background-color: #e5e5e5" th:value="${order != null ? order.orderAmount : ''}" placeholder="0" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>접수일</th>
+                                <td>
+                                    <input type="text" id="orderDate" name="orderDate" class="form-control xs"
+                                           th:value="${order != null ? order.orderDate : ''}"
+                                           placeholder="입력 안할 시, 오늘날짜" autocomplete="off" readonly/>
+                                </td>
+                                <th>출고예정일</th>
+                                <td>
+                                    <input type="text" id="releaseDate" name="releaseDate" class="form-control xs"
+                                           th:value="${order != null ? order.releaseDate : ''}"
+                                           placeholder="입력 안할 시, 오늘날짜 +7일" autocomplete="off" readonly/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비고</th>
+                                <td colspan="4">
+                                    <input type="text" name="etc" class="form-control xs"
+                                           th:value="${order != null ? order.etc : ''}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>수주 상태</th>
+                                <td colspan="4">
+                                    <th:block th:if="${order != null}" th:switch="${order.orderState}">
+                                        <strong th:case="0" th:id="result" style="color: red">수주 접수</strong>
+                                        <strong th:case="1" th:id="result" style="color: blue">출하 완료</strong>
+                                    </th:block>
+                                    <input type="hidden" name="orderState" th:value="${order != null ? order.orderState : ''}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-1 flex-content-between">
+                            <button type="button" id="btnBack" class="btn_back btn btn-default"
+                                    th:onclick="|location.href='/order/list'|">
+                                <i class="fa fa-arrow-left" aria-hidden="true"> 이전페이지</i>
+                            </button>
+
+                            <th:block th:if="${order == null || order.orderState == 0}">
+                                <button type="submit" th:if="${order == null}" th:id="btnQuestionSubmit" class="btn btn-primary">
+                                    <i class="fa fa-pencil" aria-hidden="true">저장하기</i>
+                                </button>
+                            </th:block>
+
+                            <button type="submit" th:if="${order != null}" th:id="btnQuestionSubmit" class="btn btn-primary">
+                                <i class="fa fa-pencil" aria-hidden="true"> 수정하기</i>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+
+            <th:block th:if="${order != null}"
+                      th:include="/order/orderInputFormProductList.html"/>
+        </div>
+    </div>
+</div>
+</body>
+<script  th:inline="javascript">
+    $(document).ready(function () {
+        settingDatePicker(['orderDate', 'releaseDate'], 'inputForm')
+
+        $('form[name=inputForm]').validate({
+            rules: {
+                title: "required",
+                accountName: "required",
+            }, messages: {
+                title: "수주명을 입력해 주세요.",
+                accountName: "거래처를 입력해 주세요.",
+            }
+        });
+
+    });
+
+    function accountListPopup2(value) {
+        window.open(
+            '/account/popupList?value=' + value,
+            'popup_accountList',
+            option(1100, 700) + ', toolbar=no,menubar=no,status=no,scrollbar=no,resizable=no'
+        );
+    }
+</script>
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+</html>
