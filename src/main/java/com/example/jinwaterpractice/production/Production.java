@@ -37,7 +37,7 @@ public class Production {
     private Integer manufactureAmount; // 제조수량
 
     @Column(name = "manufacture_date")
-    private Date manufactureDate; // 제조일
+    private LocalDate manufactureDate; // 제조일
 
     @Column(name = "process_inspection_state", columnDefinition = "tinyint(1) default 0")
     private Integer processInspectionState; // 0: 공정검사 전, 1: 공정검사 후

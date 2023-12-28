@@ -1,6 +1,8 @@
 package com.example.jinwaterpractice.orderdetail;
 
 import com.example.jinwaterpractice.order.Order;
+import com.example.jinwaterpractice.product.Product;
+import com.example.jinwaterpractice.production.Production;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "order_detail")
@@ -26,16 +29,16 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@ManyToOne
-    //@JoinColumn(name = "product_id")
-    //private Product;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-//    @OneToMany(mappedBy = "orderDetail")
-//    private List<Production> listProduction;
+    @OneToMany(mappedBy = "orderDetail")
+    private List<Production> listProduction;
 
     private Integer amount;
 
