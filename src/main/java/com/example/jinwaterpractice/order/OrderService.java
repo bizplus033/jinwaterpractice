@@ -12,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.datetime.joda.JodaTimeFormatterRegistrar;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -31,11 +29,13 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
     public Page<ListOrderResponse> findOrderAllBySearchKeyword(String code, String accountName, Integer state, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        log.info("OrderService.findOrderAllBySearchKeyword");
         Page<Order> orderPage = jpaOrderRepository.findOrderAllBySearchKeyword(code, accountName, state, startDate, endDate, pageable);
         return orderPage.map(orderMapper::toListOrderResponse);
     }
 
     public OrderResponse findOrderById(Long orderId) {
+        log.info("OrderService.findOrderById");
         return jpaOrderRepository.findById(orderId)
                 .map(orderMapper::toOrderResponse)
                 .orElseThrow(() -> new RuntimeException("Order Not Found"));
@@ -43,6 +43,7 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(CreateOrderRequest request) {
+        log.info("OrderService.createOrder");
         Account accountPS = jpaAccountRepository.findById(request.getAccountId())
                 .orElseThrow(() -> new RuntimeException("Account Not Found"));
         return jpaOrderRepository.save(orderMapper.toEntity(request, accountPS));
@@ -51,6 +52,7 @@ public class OrderService {
 
     @Transactional
     public void updateOrder(UpdateOrderRequest request) {
+        log.info("OrderService.updateOrder");
         Order orderPS = jpaOrderRepository.findById(request.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order Not Found"));
         Account accountPS = jpaAccountRepository.findById(request.getAccountId())
@@ -63,6 +65,7 @@ public class OrderService {
      * */
     @Transactional
     public void updateOrderState(Long orderId) {
+        log.info("OrderService.updateOrderState");
         int orderDetailShippingStatus = 3; // 수주제품: 출하검사 완료
         int orderShippingStatus = 1; // 수주: 출하완료
         boolean result = false;
@@ -81,10 +84,12 @@ public class OrderService {
     }
     @Transactional
     public void updateDeleteStateOfOrder(Long[] orderIds) {
+        log.info("OrderService.updateDeleteStateOfOrder");
         jpaOrderRepository.updateDeleteStateOfOrder(orderIds);
     }
 
     public String findOrderCodeOneByCreatedAtToday() {
+        log.info("OrderService.findOrderCodeOneByCreatedAtToday");
         List<Order> listOrder = jpaOrderRepository.findOrderCodeMaxOneByCreatedAtToday();
         if (!listOrder.isEmpty()) {
             return listOrder.get(0).getCode();
