@@ -12,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,7 +40,7 @@ public class Product {
 //    private List<ProductBOM> listProductBOM;
 
     @OneToMany(mappedBy = "product")
-    private List<OrderDetail> listOrderDetail;
+    private List<OrderDetail> listOrderDetail = new ArrayList<>();
 
     @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
     private Integer deleteState;
