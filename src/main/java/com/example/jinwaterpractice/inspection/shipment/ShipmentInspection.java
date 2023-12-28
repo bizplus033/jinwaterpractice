@@ -1,7 +1,6 @@
-package com.example.jinwaterpractice.bom;
+package com.example.jinwaterpractice.inspection.shipment;
 
-import com.example.jinwaterpractice.material.Material;
-import com.example.jinwaterpractice.product.Product;
+import com.example.jinwaterpractice.production.Production;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,31 +13,32 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "product_bom")
+@Table(name = "shipment_inspection")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class ProductBOM {
+public class ShipmentInspection {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @OneToOne
+    @JoinColumn(name = "production_id")
+    private Production production;
 
-    // OneToOne으로 하려고 했다가 ManyToOne으로 했다고 함
-    @ManyToOne
-    @JoinColumn(name = "material_id")
-    private Material material;
+    @Column(name = "inspection_date")
+    private LocalDate inspectionDate; // 검사일자
+
+    @Column(name = "shipment_amount")
+    private Integer shipmentAmount; // 출하 수량
+
+    @Column(name = "completed_status", columnDefinition = "tinyint(1) default 0")
+    private Integer completedStatus; // 0: 출하검사 전, 1: 출하검사 완료
 
     private String etc;
-
-    @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
-    private Integer deleteState;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

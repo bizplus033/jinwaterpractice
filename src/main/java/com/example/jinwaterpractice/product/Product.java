@@ -1,7 +1,7 @@
-package com.example.jinwaterpractice.bom;
+package com.example.jinwaterpractice.product;
 
-import com.example.jinwaterpractice.material.Material;
-import com.example.jinwaterpractice.product.Product;
+import com.example.jinwaterpractice.bom.ProductBOM;
+import com.example.jinwaterpractice.orderdetail.OrderDetail;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,30 +12,34 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name = "product_bom")
+@Table(name = "products")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class ProductBOM {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    private String code;
 
-    // OneToOne으로 하려고 했다가 ManyToOne으로 했다고 함
-    @ManyToOne
-    @JoinColumn(name = "material_id")
-    private Material material;
+    private String name;
+
+    @Column(name = "unit_price")
+    private Integer unitPrice; // 단가
 
     private String etc;
+
+    //@OneToMany(mappedBy = "product")
+//    private List<ProductBOM> listProductBOM;
+
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> listOrderDetail;
 
     @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
     private Integer deleteState;
@@ -47,4 +51,7 @@ public class ProductBOM {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
+//    @OneToOne(mappedBy = "product")
+//    private ProductStock productStock;
 }

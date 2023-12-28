@@ -1,7 +1,7 @@
-package com.example.jinwaterpractice.bom;
+package com.example.jinwaterpractice.inspection.shipment.report;
 
-import com.example.jinwaterpractice.material.Material;
-import com.example.jinwaterpractice.product.Product;
+import com.example.jinwaterpractice.inspection.shipment.ShipmentInspection;
+import com.example.jinwaterpractice.inspection.shipment.content.ShipmentInspectionContent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,33 +12,30 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Table(name = "product_bom")
+@Table(name = "shipment_inspection_report")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class ProductBOM {
+public class ShipmentInspectionReport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, unique = true)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "shipment_inspection_id")
+    private ShipmentInspection shipmentInspection;
 
-    // OneToOne으로 하려고 했다가 ManyToOne으로 했다고 함
     @ManyToOne
-    @JoinColumn(name = "material_id")
-    private Material material;
+    @JoinColumn(name = "shipment_inspection_content_id")
+    private ShipmentInspectionContent shipmentInspectionContent;
 
-    private String etc;
-
-    @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
-    private Integer deleteState;
+    private String checkedResult; // 판정 선택 값
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -47,4 +44,5 @@ public class ProductBOM {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
 }

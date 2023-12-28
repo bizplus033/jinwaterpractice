@@ -1,7 +1,6 @@
-package com.example.jinwaterpractice.bom;
+package com.example.jinwaterpractice.material.stock;
 
 import com.example.jinwaterpractice.material.Material;
-import com.example.jinwaterpractice.product.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,33 +11,26 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
-@Table(name = "product_bom")
+@Table(name = "material_stock")
 @Getter
 @Setter
 @NoArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class ProductBOM {
+public class MaterialStock {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    // OneToOne으로 하려고 했다가 ManyToOne으로 했다고 함
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "material_id")
     private Material material;
 
-    private String etc;
-
-    @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
-    private Integer deleteState;
+    private Integer stock;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
