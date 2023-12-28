@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,10 +21,10 @@ public class UpdateOrderRequest {
     private Integer orderAmount;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date orderDate;
+    private LocalDate orderDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     private String etc;
 }
