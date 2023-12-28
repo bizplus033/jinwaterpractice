@@ -1,0 +1,133 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div id="content">
+  <th:block th:include="../static/layout/content-header.html"/>
+  <div class="box box-bg">
+    <form name="inputForm" method="post"
+          th:action="${company == null ? '/company/create' : '/company/edit'}">
+      <input type="hidden" name="id" th:value="${company != null ? company.id : ''}"/>
+      <table class="table-input xs">
+        <colgroup>
+          <col width="150px">
+          <col width="*">
+          <col width="150px">
+          <col width="*">
+        </colgroup>
+        <tbody>
+        <tr>
+          <th>회사명 <strong style="color: red">*</strong></th>
+          <td colspan="3">
+            <input type="text" name="name" class="form-control xs"
+                   th:value="${company != null ? company.name : ''}"/>
+          </td>
+        </tr>
+        <tr>
+          <th>사업자번호</th>
+          <td>
+            <input type="text" name="businessNumber" class="form-control xs"
+                   th:value="${company != null ? company.businessNumber : ''}"/>
+          </td>
+          <th>대표자</th>
+          <td>
+            <input type="text" name="ceo" class="form-control xs"
+                   th:value="${company != null ? company.ceo : ''}"/>
+          </td>
+        </tr>
+        <tr>
+          <th>업종</th>
+          <td>
+            <input type="text" name="businessType" class="form-control xs"
+                   th:value="${company != null ? company.businessType : ''}"/>
+          </td>
+          <th>업태</th>
+          <td>
+            <input type="text" name="businessCategory" class="form-control xs"
+                   th:value="${company != null ? company.businessCategory : ''}"/>
+          </td>
+        </tr>
+
+        <tr>
+          <th rowspan="3">주소</th>
+          <td colspan="3">
+            <input type="text" name="zipCode" class="form-control xs w-100"
+                   th:value="${company != null ? company.zipCode : ''}" style="background-color: #e5e5e5"
+                   readonly/>
+            <button type="button" id="btnAddressSearch1" class="btn btn-xs">
+              <i class="fa fa-search" aria-hidden="true">주소찾기</i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <input type="text" name="address" class="form-control xs"
+                   th:value="${company != null ? company.address : ''}" style="background-color: #e5e5e5"
+                   readonly/>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <input type="text" name="addressDetail" class="form-control xs"
+                   th:value="${company != null ? company.addressDetail : ''}"/>
+          </td>
+        </tr>
+        <tr>
+          <th>전화</th>
+          <td>
+            <input type="text" name="tel" class="form-control xs"
+                   th:value="${company != null ? company.tel : ''}"/>
+          </td>
+          <th>Fax</th>
+          <td>
+            <input type="text" name="fax" class="form-control xs"
+                   th:value="${company != null ? company.fax : ''}"/>
+          </td>
+        </tr>
+        <tr>
+          <th>이메일</th>
+          <td colspan="3">
+            <input type="text" name="email" class="form-control xs"
+                   th:value="${company != null ? company.email : ''}"/>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="mt-1 flex-content-center">
+        <button type="submit" id="btnQuestionSubmit" class="btn btn-primary">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+          [[${company == null ? '저장하기' : '수정하기'}]]
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('form[name="inputForm"]').validate({
+      rules: {
+        name: "required",
+      }, messages: {
+        name: "회사명을 입력해 주세요.",
+      }, submitHandler: function (form) {
+        form.submit();
+      }
+    });
+
+    $('#btnAddressSearch1').on('click', function (e) {
+      getAddressSearch(['zipCode', 'address', 'addressDetail'], 'inputForm');
+    });
+
+  });
+</script>
+<script th:inline="javascript">
+  var message = /*[[${message}]]*/ null;
+
+  if (message !== null) {
+    alert(message);
+  }
+</script>
+</html>
