@@ -1,5 +1,6 @@
 package com.example.jinwaterpractice.account;
 
+import com.example.jinwaterpractice.order.Order;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +74,6 @@ public class Account {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-//    @OneToMany(mappedBy = "account")
-//    private List<Order> orders = new ArrayList<>();
+    @OneToMany(mappedBy = "account")
+    private List<Order> orders = new ArrayList<>();
 }
