@@ -26,12 +26,12 @@ public class ProductBOM {
 //    @Column(nullable = false, unique = true)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
     // OneToOne으로 하려고 했다가 ManyToOne으로 했다고 함
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "material_id")
     private Material material;
 
