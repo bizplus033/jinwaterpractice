@@ -44,7 +44,7 @@ public class OrderDetail {
 
     private String etc;
 
-    @Column(columnDefinition = "tintint(1) default 0")
+    @Column(columnDefinition = "tinyint(1) default 0")
     private Integer state; // 0: 수주, 1: 생산, 2: 공정, 3: 출하
 
     @Column(name = "delete_state", columnDefinition = "tinyint(1) default 0")
