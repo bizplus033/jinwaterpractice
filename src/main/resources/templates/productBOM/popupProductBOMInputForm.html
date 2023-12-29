@@ -1,0 +1,78 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html"></head>
+<body>
+<div class="box box-bg">
+  <div class="content-header">
+    <p class="title" th:text="${productBOM == null ? '제품BOM 등록하기' : '제품BOM 수정하기'}"></p>
+  </div>
+  <form name="inputForm" method="post"
+        th:with="action = ${productBOM == null ? '/productBOM/create' : '/productBOM/edit'}"
+        th:action="${action}">
+    <input type="hidden" name="productId" th:if="${productBOM == null}" th:value="${param.id}">
+    <th:block th:if="${productBOM != null}">
+      <input type="hidden" name="id" th:value="${productBOM.id}">
+      <input type="hidden" name="productId" th:value="${productBOM.productId}">
+    </th:block>
+    <table class="table-input xs">
+      <tbody>
+      <tr>
+        <th>자재 코드 <strong style="color: red">*</strong></th>
+        <td>
+          <input type="text" id="materialCode" name="materialCode" class="form-control xs"
+                 onclick="materialListPopup(1)" readonly
+                 th:value="${productBOM != null ? productBOM.materialCode : ''}"
+                 placeholder="자재를 선택해주세요.">
+          <input type="hidden" id="materialId" name="materialId"
+                 th:value="${productBOM != null ? productBOM.materialId : ''}">
+        </td>
+      </tr>
+      <tr>
+        <th>자재명 <strong style="color: red">*</strong></th>
+        <td>
+          <input type="text" id="materialName" class="form-control xs"
+                 th:value="${productBOM != null ? productBOM.materialName : ''}"
+                 style="background-color: #e5e5e5" readonly/>
+        </td>
+      </tr>
+      <tr>
+        <th>단가 <strong style="color: red">*</strong></th>
+        <td>
+          <input type="text" id="materialUnitPrice" class="form-control xs"
+                 th:value="${productBOM != null ? productBOM.materialUnitPrice : ''}"
+                 style="background-color: #e5e5e5" readonly/>
+        </td>
+      </tr>
+      <tr>
+        <th>비고</th>
+        <td>
+          <input type="text" id="etc" name="etc" class="form-control xs"
+                 th:value="${productBOM != null ? productBOM.etc : ''}"/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="mt-1 flex-content-center">
+      <button type="submit" class="btn btn-primary">
+        <i class="fa fa-pencil" aria-hidden="true"></i>
+        [[${productBOM == null ? '등록하기' : '수정하기'}]]
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('form[name="inputForm"]').validate({
+      rules: {
+        productCode: "required",
+        amount: {required:true,min:1}
+      }, messages: {
+        productCode: "제품을 선택해 주세요",
+        amount: {required:"수주 수량을 입력해 주세요.", min: "숫자를 입력해주세요."},
+      }
+    });
+  });
+
+</script>
+</html>
