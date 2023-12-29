@@ -74,8 +74,7 @@ public class DslOrderDetailRepositoryImpl implements DslOrderDetailRepository{
                 .fetch();
     }
     /**
-     * update를 굳이 querydsl로 쓰는건 옳지 않다.
-     * 변경 감지를 사용해서 값을 변경하자
+     * 벌크 연산
      * */
     @Override
     public void updateDeleteStateOfOrderDetail(Long orderDetailId) {
@@ -88,7 +87,7 @@ public class DslOrderDetailRepositoryImpl implements DslOrderDetailRepository{
         em.clear();
     }
     /**
-     * update를 굳이 querydsl로 쓰는건 옳지 않다.
+     * 단건 update를 굳이 querydsl로 쓰는건 옳지 않다.
      * 변경 감지를 사용해서 값을 변경하자
      * */
     @Override
