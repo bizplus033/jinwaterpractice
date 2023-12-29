@@ -63,4 +63,13 @@ public class ProductService {
         jpaProductRepository.updateDeleteStateOfProduct(productIds);
     }
 
+    /**
+     * 제품코드 중복검사
+     * */
+    public boolean checkByProductCode(String code) {
+        boolean check = jpaProductRepository.findByCode(code).isPresent();
+        System.out.println(check);
+        return check;
+    }
+
 }

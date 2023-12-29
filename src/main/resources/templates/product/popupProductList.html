@@ -1,0 +1,133 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html">
+</head>
+<body>
+<div id="content">
+    <th:block th:include="../static/layout/content-header.html"/>
+    <div class="box box-bg">
+        <p class="title">제품 정보 관리</p>
+        <div class="popupList">
+            <form method="GET" action="/product/popupList">
+                <input type="hidden" name="value" th:value="${param.value}"/>
+                <table class="table-input">
+                    <colgroup>
+                        <col width="10%">
+                        <col width="22%">
+                        <col width="10%">
+                        <col width="22%">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>제품코드</th>
+                        <td>
+                            <input type="text" name="code" class="form-control xs"
+                                   th:value="${searchKeyWord != null ? searchKeyWord.code : ''}">
+                        </td>
+                        <th>제품명</th>
+                        <td>
+                            <input type="text" name="name" class="form-control xs"
+                                   th:value="${searchKeyWord != null ? searchKeyWord.name : ''}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="mt-1 mb-1 txt-right">
+                    <button type="submit" class="btn">
+                        <i class="fa fa-search" aria-hidden="true">검색하기</i>
+                    </button>
+                </div>
+
+                <div class="flex-content-between mb-1">
+                    <div class="ft-bold">
+                        Total :  [[${result != null ? result.totalCount : ''}]] 건
+                    </div>
+                </div>
+
+                <table class="table-list full" style="text-align: center">
+                    <colgroup>
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="200px">
+                        <col width="*">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>제품코드</th>
+                        <th>제품명</th>
+                        <th>단가</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${productPage != null}">
+                        <tr style="cursor: pointer;" th:each="product : ${productPage.content}"
+                            onclick="productSelect(this)" th:data-value="${product.id}">
+                            <td>[[${product.code}]]</td>
+                            <td>[[${product.name}]]</td>
+                            <td>[[${product.unitPrice}]]</td>
+                            <td>[[${product.etc}]]</td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </form>
+
+            <div class="pagination" th:if="${productPage.totalPages > 0}" th:with="value=${param.value}">
+                <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
+                   th:href="@{/product/popupList(page=0, value=${value}, code=${code}, name=${name})}">
+                    처음
+                </a>
+                <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
+                   th:href="@{/product/popupList(page=${pagingUtil.blockStartNo - 2}, value=${value}, code=${code}, name=${name})}">
+                    이전
+                </a>
+                <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
+                   th:href="@{/product/popupList(page=${PageNo - 1}, value=${value}, code=${code}, name=${name})}"
+                   th:classappend="${(PageNo - 1) == productPage.number ? 'active' : ''}"
+                   th:styleappend="${(PageNo - 1) == productPage.number ? 'background-color: #808080;' : ''}"
+                   th:text="${PageNo}">
+                </a>
+                <a class="next" th:if="${productPage.totalPages > pagingUtil.blockEndNo}"
+                   th:href="@{/product/popupList(page=${pagingUtil.blockEndNo}, value=${value}, code=${code}, name=${name})}">
+                    다음
+                </a>
+                <a class="last" th:if="${productPage.totalPages > pagingUtil.blockEndNo}"
+                   th:href="@{/product/popupList(page=${productPage.totalPages - 1}, value=${value}, code=${code}, name=${name})}">
+                    마지막
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    function productSelect(obj) {
+
+        let tds = obj.getElementsByTagName("td");
+        let id = obj.getAttribute("data-value");
+        let code = tds[0].innerText.trim();
+        let name = tds[1].innerText.trim();
+        let unitPrice = tds[2].innerText.trim();
+
+        const val = /*[[${param.value}]]*/ '';
+        // window.close();
+
+        if (val == 1) {
+            window.opener.document.getElementById('productId').value = id;
+            window.opener.document.getElementById('productCode').value = code;
+            window.opener.document.getElementById('productName').value = name;
+            window.opener.document.getElementById('productUnitPrice').value = unitPrice;
+        } else if (val == 2) {
+            window.opener.document.getElementById('productId').value = id;
+            window.opener.document.getElementById('productName').value = name;
+            window.opener.document.getElementById('productColor').value = color;
+            const data = { productId: id };
+            window.opener.postMessage(data, '*');
+        } else {
+
+        }
+        window.close();
+    }
+</script>
+</html>

@@ -24,7 +24,9 @@
                             <tr>
                                 <th>아이디 <strong style="color: red">*</strong></th>
                                 <td colspan="3" th:if="${user == null}">
-                                    <input type="text" name="userId" class="form-control xs userId"
+                                    <input type="text" id="userId" name="userId" class="form-control xs userId"
+                                           th:data-value="${user != null ? '1' : '0'}"
+                                           th:value="${user != null ? user.userId : ''}"
                                            placeholder="아이디를 입력해주세요"/>
                                     <p id="checkUserId" size="2"></p>
                                 </td>
@@ -132,7 +134,8 @@
      * 유저 아이디 유효성 검사
      * */
     // 유저 아이디가 포커스 아웃될 때
-    $('.userId').focusout(function () {
+    // 유저 아이디가 인풋되었을 때로 변경
+    $('#userId').on('input', function () {
         let userId = $('.userId').val(); // input_id에 입력되는 값
         console.log(userId);
         $.ajax({
@@ -146,11 +149,11 @@
                     if (result) { // 입력한 아이디가 기존에 있는 경우
                         $("#checkUserId").css('color', 'red');
                         $("#checkUserId").html('사용할 수 없는 아이디입니다.');
-                        return;
+                        document.getElementById('userId').setAttribute('data-value', '0');
                     } else { // 입력한 아이디가 기존에 없는 경우
                         $("#checkUserId").css('color', 'green');
                         $("#checkUserId").html('사용할 수 있는 아이디입니다.');
-                        return;
+                        document.getElementById('userId').setAttribute('data-value', '1');
                     }
                 } else {
                     $("#checkUserId").html("");
@@ -189,7 +192,15 @@
             },
 
             submitHandler: function (form) {
-                form.submit();
+                event.preventDefault();
+
+                let check = document.getElementById('userId').getAttribute('data-value') || '0';
+                if (check === '0') {
+                    alert('코드를 다시 확인해주세요.');
+                    return false;
+                } else {
+                    form.submit();
+                }
             }
         });
     });

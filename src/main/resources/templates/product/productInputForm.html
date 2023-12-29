@@ -1,0 +1,178 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="../static/layout/top.html"></head>
+<body>
+<div class="wrapper">
+    <th:block th:include="../static/layout/sidebar.html" th:with="active='productList'"/>
+    <div class="container">
+        <div id="content">
+            <th:block th:include="../static/layout/content-header.html"/>
+            <div class="box box-bg">
+                <th:block th:with="action=${product == null ? '/product/create' : '/product/edit'}">
+                    <form id="inputForm" name="inputForm" method="POST" th:action="@{${action}}">
+                        <input type="hidden" name="id" th:value="${product != null ? product.id : ''}"/>
+                        <table class="table-input xs">
+                            <colgroup>
+                                <col width="150px">
+                                <col width="*">
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th>
+                                    제품코드<strong style="color: red">*</strong>
+                                </th>
+                                <td>
+                                    <input type="text" id="code" name="code" class="form-control xs code"
+                                           th:data-value="${product != null ? '1' : '0'}"
+                                           th:value="${product != null ? product.code : ''}"
+                                           placeholder="제품코드를 입력해주세요.">
+                                    <p id="checkCode" size="2"></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    제품명 <strong style="color: red">*</strong>
+                                </th>
+                                <td>
+                                    <input type="text" name="name" class="form-control xs" placeholder="제품명을 입력해주세요."
+                                           th:value="${product != null ? product.name : ''}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    단가 <strong style="color: red">*</strong>
+                                </th>
+                                <td>
+                                    <input type="number" name="unitPrice" class="form-control xs" placeholder="단가를 입력해주세요."
+                                           th:value="${product != null ? product.unitPrice : ''}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>비고</th>
+                                <td colspan="3">
+                                    <input type="text" name="etc" class="form-control xs"
+                                           th:value="${product != null ? product.etc : ''}"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-1 flex-content-between">
+                            <button type="button" id="btnBack" class="btn_back btn btn-default"
+                                    th:onclick="|location.href='/product/list'|">
+                                <i class="fa fa-arrow-left" aria-hidden="true">이전페이지</i>
+                            </button>
+
+                            <button type="submit" id="btnQuestionSubmit" class="btn btn-primary">
+                                <i class="fa fa-pencil" aria-hidden="true">
+                                    [[${product == null ? '저장하기' : '수정하기'}]]
+                                </i>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+            <th:block th:if="${product != null}"
+                      th:include="/product/productBOMList.html"/>
+            <th:block th:if="${product != null}"
+                      th:include="/product/processInspectionContentList.html"/>
+            <th:block th:if="${product != null}"
+                      th:include="/product/shipmentInspectionContentList.html"/>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 중복 검사 규칙 추가
+        $.validator.addMethod("checkCodeAvailability", function(value, element) {
+            let isValid = false;
+            $.ajax({
+                url: "/product/codeCheck",
+                type: "POST",
+                data: {code: value},
+                async: false,
+                success: function (result) {
+                    isValid = !result; // 결과가 true면 사용 가능한 코드임을 나타냄
+                },
+                error: function () {
+                    alert("서버요청실패");
+                }
+            });
+            return isValid;
+        }, "사용할 수 없는 코드입니다.");
+
+        $('form[name="inputForm"]').validate({
+            rules: {
+                code: "required",
+                remote: {
+                    url: "/product/codeCheck",
+                    type: "POST",
+                    data: {
+                        code: function() {
+                            return $(".code").val();
+                        }
+                    }
+                },
+                name: "required",
+                unitPrice: "required"
+
+
+            }, messages: {
+                code: "제품코드를 입력해 주세요.",
+                name: "제품명을 입력해 주세요.",
+                unitPrice: "단가를 입력해주세요."
+            },
+            submitHandler(form){
+                event.preventDefault();
+
+                let check = document.getElementById('code').getAttribute('data-value') || '0';
+                if(check === '0'){
+                    alert('코드를 다시 확인해주세요.');
+                    return false;
+                }
+                else{
+                    form.submit();
+                }
+            }
+        });
+
+        $('#code').on('input', function () {
+            let code = $('.code').val();
+            $.ajax({
+                url: "/product/codeCheck",
+                type: "POST",
+                // data: {type: 'materials', code: code},
+                data: {code: code},
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    if(code !== '') {
+                        if (result) {
+                            $("#checkCode").css('color', 'red');
+                            $("#checkCode").html('사용할 수 없는 코드입니다.');
+                            document.getElementById('code').setAttribute('data-value', '0');
+                        } else {
+                            $("#checkCode").css('color', 'green');
+                            $("#checkCode").html('사용할 수 있는 코드입니다.');
+                            document.getElementById('code').setAttribute('data-value', '1');
+                        }
+                    } else {
+                        $("#checkCode").html("");
+                    }
+                },
+                error: function () {
+                    alert("서버요청실패");
+                }
+            })
+        })
+    });
+
+</script>
+<script th:inline="javascript">
+    var message = /*[[${message}]]*/ null;
+
+    if (message !== null) {
+        alert(message);
+    }
+</script>
+</html>
