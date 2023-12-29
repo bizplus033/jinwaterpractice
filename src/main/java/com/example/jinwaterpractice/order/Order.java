@@ -70,4 +70,8 @@ public class Order {
         this.state = status;
     }
 
+    public void updateOrderAmount(int orderDetailAmount){
+        this.orderAmount += orderDetailAmount;
+    }
+
 }
