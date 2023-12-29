@@ -40,6 +40,7 @@ public class ProductService {
 
     @Transactional
     public Product createProduct(CreateProductRequest request) {
+        log.info("ProductService.createProduct");
         Product productPS = jpaProductRepository.save(modelMapper.map(request, Product.class));
 
         // 제품 생성시 제품에 대한 제품 재고 생성
@@ -50,6 +51,7 @@ public class ProductService {
 
     @Transactional
     public void updateProduct(UpdateProductRequest request) {
+        log.info("ProductService.updateProduct");
         Product productPS = jpaProductRepository.findById(request.getId())
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
         modelMapper.map(request, productPS);
@@ -57,6 +59,7 @@ public class ProductService {
 
     @Transactional
     public void updateProductDeleteState(Long[] productIds) {
+        log.info("ProductService.updateProductDeleteState");
         jpaProductRepository.updateDeleteStateOfProduct(productIds);
     }
 
