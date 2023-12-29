@@ -89,7 +89,7 @@ public class OrderDetailService {
 
             // OrderDetail.amount 삭제 시 -> Order.amount 수량 감소
             Order order = orderDetailPS.getOrder();
-            order.updateOrderAmount(-orderDetailPS.getAmount());
+            order.updateOrderAmount(-orderDetailPS.getAmount()); // 수량 감소
         }
     }
 }

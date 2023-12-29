@@ -31,10 +31,10 @@
             <th>접수일</th>
             <td class="flex-content-between">
                 <input type="text" id="startDate" name="startDate" class="form-control xs"
-                       th:value="${#dates.format(startDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
+                       th:value="${#temporals.format(startDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
                 <span class="ft-3 ml-2 mr-2"> - </span>
                 <input type="text" id="endDate" name="endDate" class="form-control xs"
-                       th:value="${#dates.format(endDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
+                       th:value="${#temporals.format(endDate, 'yyyy-MM-dd')}" autocomplete="off" readonly>
             </td>
         </tr>
         </tbody>
@@ -63,6 +63,7 @@
 </form>
 <script type="text/javascript">
     $(document).ready(function () {
+        $.datepicker.setDefaults($.datepicker.regional['ko']); // 한글 설정
         settingDatePicker(['startDate', 'endDate'], 'inputForm')
     })
 </script>

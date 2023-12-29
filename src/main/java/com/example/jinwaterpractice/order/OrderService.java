@@ -101,6 +101,7 @@ public class OrderService {
 
     // 0_yyMMdd_n 형식 수주코드 생성
     public String createOrderCode(String orderCode){
+        log.info("OrderService.createOrderCode");
         String newOrderCode = "0_";
 
         // 오늘 날짜로 생성된 코드가 없다면

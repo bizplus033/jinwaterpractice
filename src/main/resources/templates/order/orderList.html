@@ -45,8 +45,8 @@
                             </td>
                             <td class="txt-center">[[${order.accountName}]]</td>
                             <td class="txt-center">[[${order.manager}]]</td>
-                            <td class="txt-center">[[${#dates.format(order.orderDate, 'yyyy-MM-dd')}]]</td>
-                            <td class="txt-center">[[${#dates.format(order.releaseDate, 'yyyy-MM-dd')}]]</td>
+                            <td class="txt-center">[[${#temporals.format(order.orderDate, 'yyyy-MM-dd')}]]</td>
+                            <td class="txt-center">[[${#temporals.format(order.releaseDate, 'yyyy-MM-dd')}]]</td>
                             <td class="txt-center" th:text="${#numbers.formatInteger(order.orderAmount, 1, 'COMMA')}"></td>
                             <td class="txt-center">
                                 <th:block th:switch="${order.orderState}">
@@ -63,29 +63,29 @@
                 <div class="pagination" th:if="${orderPage.totalPages > 0}">
                     <a class="first" th:if="${pagingUtil.blockStartNo > 1}"
                        th:href="@{/order/list(page=0, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
-                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
                         처음
                     </a>
                     <a class="next" th:if="${pagingUtil.blockStartNo > 1}"
                        th:href="@{/order/list(page=${pagingUtil.blockStartNo - 2}, orderCode=${orderCode}, accountName=${accountName},
-                       orderState=${orderState}, startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                       orderState=${orderState}, startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
                         이전
                     </a>
                     <a class="page-link" th:each="PageNo : ${#numbers.sequence(pagingUtil.blockStartNo, pagingUtil.blockEndNo)}"
                        th:href="@{/order/list(page=${PageNo - 1}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
-                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}"
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}"
                        th:classappend="${(PageNo - 1) == orderPage.number ? 'active' : ''}"
                        th:styleappend="${(PageNo - 1) == orderPage.number ? 'background-color: #808080;' : ''}"
                        th:text="${PageNo}">
                     </a>
                     <a class="next" th:if="${orderPage.totalPages > pagingUtil.blockEndNo}"
                        th:href="@{/order/list(page=${pagingUtil.blockEndNo}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
-                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
                         다음
                     </a>
                     <a class="last" th:if="${orderPage.totalPages > pagingUtil.blockEndNo}"
                        th:href="@{/order/list(page=${orderPage.totalPages - 1}, orderCode=${orderCode}, accountName=${accountName}, orderState=${orderState},
-                       startDate=${#dates.format(startDate, 'yyyy-MM-dd')}, endDate=${#dates.format(endDate, 'yyyy-MM-dd')})}">
+                       startDate=${#temporals.format(startDate, 'yyyy-MM-dd')}, endDate=${#temporals.format(endDate, 'yyyy-MM-dd')})}">
                         마지막
                     </a>
                 </div>
