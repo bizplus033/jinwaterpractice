@@ -1,6 +1,7 @@
 package com.example.jinwaterpractice.product.stock;
 
 import com.example.jinwaterpractice.product.Product;
+import com.example.jinwaterpractice.product.ProductService;
 import com.example.jinwaterpractice.product.stock.history.ProductStockHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,4 +45,11 @@ public class ProductStock {
 
     @OneToMany(mappedBy = "productStock")
     private List<ProductStockHistory> listProductStockHistory;
+
+    public static ProductStock factory(Product product) {
+        ProductStock productStock = new ProductStock();
+        productStock.setProduct(product);
+        productStock.setStock(0);
+        return productStock;
+    }
 }

@@ -47,6 +47,7 @@ public class DslProductRepositoryImpl implements DslProductRepository{
                 .execute();
 
         // todo 벌크 연산이니까 Persistent Context 비워줘야 할까? 일단 그냥 해보자
+        // user에는 그냥 해도 되었음
     }
 
     private BooleanExpression likeNameIgnoreCase(String name) {
