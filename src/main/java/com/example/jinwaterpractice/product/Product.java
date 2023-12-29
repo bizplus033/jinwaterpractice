@@ -2,6 +2,7 @@ package com.example.jinwaterpractice.product;
 
 import com.example.jinwaterpractice.bom.ProductBOM;
 import com.example.jinwaterpractice.orderdetail.OrderDetail;
+import com.example.jinwaterpractice.product.stock.ProductStock;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,6 +54,6 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-//    @OneToOne(mappedBy = "product")
-//    private ProductStock productStock;
+    @OneToOne(mappedBy = "product", fetch = FetchType.LAZY)
+    private ProductStock productStock;
 }
